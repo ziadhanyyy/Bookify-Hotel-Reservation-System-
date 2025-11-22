@@ -1,0 +1,21 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">Bookify</a>
+
+        <div class="d-flex">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a class="btn btn-outline-primary me-2" asp-controller="Account" asp-action="Login">Login</a>
+                <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Register</a>
+            }
+            else
+            {
+                <span class="me-3 mt-2">Hello, @User.Identity.Name</span>
+
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            }
+        </div>
+    </div>
+</nav>

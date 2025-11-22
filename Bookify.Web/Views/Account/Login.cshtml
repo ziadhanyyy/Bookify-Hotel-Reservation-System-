@@ -1,0 +1,222 @@
+﻿@model Bookify.Core.DTOs.LoginDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Account - Bookify</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-wrapper {
+            display: flex;
+            width: 900px;
+            max-width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .image-section {
+            flex: 1;
+            background: url('/images/unsplash_CepDpEiALqM.png') no-repeat center center/cover;
+            padding: 30px;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+        }
+
+            .image-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.2);
+                z-index: 1;
+            }
+
+        .logo-box {
+            position: relative;
+            z-index: 2;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.75);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+            .logo-box h1 {
+                color: #2a68c0;
+                font-size: 36px;
+                font-weight: 700;
+            }
+
+        .login-form-section {
+            width: 450px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+            .input-group input {
+                width: 100%;
+                padding: 12px 15px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                font-size: 15px;
+            }
+
+                .input-group input:focus {
+                    border-color: #2a68c0;
+                }
+
+        .text-danger {
+            font-size: 13px;
+            color: red;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+            .password-container input {
+                padding-right: 40px;
+            }
+
+        .eye-icon {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background-color: #2a68c0;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+            .btn-login:hover {
+                background-color: #1f509e;
+            }
+
+        @@media (max-width: 950px) {
+            .main-wrapper {
+                flex-direction: column;
+                width: 95%;
+            }
+
+            .image-section {
+                display: none;
+            }
+
+            .login-form-section {
+                width: 100%;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="image-section">
+            <div class="logo-box">
+                <h1>Bookify.</h1>
+            </div>
+        </div>
+
+        <div class="login-form-section">
+
+            <h2>Login Account</h2>
+
+            <form asp-action="Login" asp-controller="Account" method="post">
+                @Html.AntiForgeryToken()
+
+                <!-- Email -->
+                <div class="input-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" type="email" placeholder="Enter your email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="input-group">
+                    <label asp-for="Password"></label>
+                    <div class="password-container">
+                        <input asp-for="Password" placeholder="Enter your password" />
+                        <span class="eye-icon" id="togglePassword"><i class="fa fa-eye"></i></span>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="input-group" style="display:flex;align-items:center;gap:10px;">
+                    <input asp-for="RememberMe" type="checkbox" style="width:auto;" />
+                    <label asp-for="RememberMe"></label>
+                </div>
+
+                <!-- Error (Invalid login attempt) -->
+                <span asp-validation-summary="ModelOnly" class="text-danger"></span>
+
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+
+            <div class="create-account-link">
+                <a href="/Account/Register">Create Account</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('Password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            this.innerHTML = type === 'password'
+                ? '<i class="fa fa-eye"></i>'
+                : '<i class="fa fa-eye-slash"></i>';
+        });
+    </script>
+
+</body>
+</html>

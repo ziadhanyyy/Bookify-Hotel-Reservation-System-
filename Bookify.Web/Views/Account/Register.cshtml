@@ -1,0 +1,286 @@
+﻿@model Bookify.Core.DTOs.RegisterDto
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main-wrapper {
+            display: flex;
+            width: 900px;
+            max-width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            min-height: 700px;
+        }
+
+        .image-section {
+            flex: 1;
+            background: url('/images/unsplash_CepDpEiALqM.png') no-repeat center center/cover;
+            padding: 30px;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+        }
+
+            .image-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.2);
+                z-index: 1;
+            }
+
+        .logo-box {
+            position: relative;
+            z-index: 2;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.75);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+            .logo-box h1 {
+                color: #2a68c0;
+                font-size: 36px;
+                font-weight: 700;
+                margin: 0;
+            }
+
+        .register-form-section {
+            width: 450px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+            .register-form-section h2 {
+                font-size: 28px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 40px;
+            }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: #555;
+            }
+
+            .input-group input,
+            .input-group select {
+                width: 100%;
+                padding: 12px 15px;
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                font-size: 15px;
+                transition: border-color 0.3s;
+                box-sizing: border-box;
+            }
+
+                .input-group input:focus {
+                    border-color: #2a68c0;
+                }
+
+        .password-container {
+            position: relative;
+        }
+
+            .password-container input {
+                padding-right: 40px;
+            }
+
+            .password-container .eye-icon {
+                position: absolute;
+                top: 50%;
+                right: 15px;
+                transform: translateY(-50%);
+                cursor: pointer;
+                color: #999;
+            }
+
+        .terms-text {
+            font-size: 12px;
+            color: #777;
+            margin: 10px 0 20px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background-color: #2a68c0;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+            .btn-register:hover {
+                background-color: #1f509e;
+            }
+
+        .login-account-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+            .login-account-link a {
+                color: #2a68c0;
+                text-decoration: none;
+            }
+
+        .text-danger {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main-wrapper">
+
+        <div class="image-section">
+            <div class="logo-box">
+                <h1>Bookify.</h1>
+            </div>
+        </div>
+
+        <div class="register-form-section">
+            <h2>Create Account</h2>
+
+            @* ---------- SHOW MODEL ERRORS ----------- *@
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <form asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="input-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="PhoneNo"></label>
+                    <input asp-for="PhoneNo" />
+                    <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Country"></label>
+                    <input asp-for="Country" />
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="Password"></label>
+                    <div class="password-container">
+                        <input asp-for="Password" />
+                        <span class="eye-icon" id="togglePassword"><i class="fa fa-eye"></i></span>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="input-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <div class="password-container">
+                        <input asp-for="ConfirmPassword" />
+                        <span class="eye-icon" id="toggleConfirm"><i class="fa fa-eye"></i></span>
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                @* Hidden role because your service forces "User" *@
+                <input type="hidden" asp-for="Role" />
+
+                <p class="terms-text">
+                    By signing up you agree to our
+                    <a href="#">terms and conditions</a> and <a href="#">privacy policy</a>.
+                </p>
+
+                <button type="submit" class="btn-register">Register</button>
+            </form>
+
+            <div class="login-account-link">
+                <a asp-action="Login">Login</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.querySelector('input[name="Password"]');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            this.innerHTML = type === 'password'
+                ? '<i class="fa fa-eye-slash"></i>'
+                : '<i class="fa fa-eye"></i>';
+        });
+
+        const toggleConfirm = document.getElementById('toggleConfirm');
+        const confirmInput = document.querySelector('input[name="ConfirmPassword"]');
+
+        toggleConfirm.addEventListener('click', function () {
+            const type = confirmInput.type === 'password' ? 'text' : 'password';
+            confirmInput.type = type;
+            this.innerHTML = type === 'password'
+                ? '<i class="fa fa-eye-slash"></i>'
+                : '<i class="fa fa-eye"></i>';
+        });
+    </script>
+
+</body>
+</html>
