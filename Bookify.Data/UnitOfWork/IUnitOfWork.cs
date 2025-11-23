@@ -11,6 +11,7 @@ namespace Bookify.Data.UnitOfWork
     {
         IRoomRepository Rooms { get; }
         IBookingRepository Bookings { get; }
+        IPaymentRepository Payments { get; }
         int Complete();
     }
 }
