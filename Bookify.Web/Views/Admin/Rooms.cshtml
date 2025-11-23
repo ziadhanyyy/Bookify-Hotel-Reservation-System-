@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Bookify.Core.DTOs.RoomDto>
+
+@{
+    ViewData["Title"] = "Rooms";
+}
+
+<h2>Rooms</h2>
+
+<a asp-action="AddRoom" class="btn btn-primary mb-3">Add New Room</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Room Number</th>
+            <th>Room Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model)
+        {
+            <tr>
+                <td>@room.RoomNumber</td>
+                <td>@room.RoomTypeId</td>
+               
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -5,6 +5,7 @@ using Bookify.Data.Context;
 using Bookify.Data.Repositories;
 using Bookify.Data.UnitOfWork;
 using Bookify.Services.Implementations;
+using Bookify.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -22,15 +23,20 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoomTypeRepository, RoomTypeRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<BookifyDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddScoped<IAdminService, AdminService>();
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+
     await IdentitySeedData.SeedRolesAsync(roleManager);
+    await IdentitySeedData.SeedAdminAsync(userManager);
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -42,13 +48,12 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
@@ -56,6 +61,6 @@ app.MapControllerRoute(
 
 app.Run();
 //to migrate anything
-//Add-Migration m2 -Project Bookify.Data -StartupProject Bookify.Web
+//Add-Migration m5 -Project Bookify.Data -StartupProject Bookify.Web
 
 //Update-Database -Project Bookify.Data -StartupProject Bookify.Web

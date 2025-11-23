@@ -24,33 +24,38 @@ namespace Bookify.Services.Implementations
 
         public async Task<IdentityResult> RegisterAsync(RegisterDto registerDto)
         {
-            
             var user = new User
             {
-                Country= registerDto.Country,
+                Country = registerDto.Country,
                 Name = registerDto.Name,
                 PhoneNumber = registerDto.PhoneNo,
-                UserName = registerDto.Username,
-                Email = registerDto.Email,
+                UserName = registerDto.Username,   
+                Email = registerDto.Email,         
             };
+
             var createResult = await _userManager.CreateAsync(user, registerDto.Password);
+            if (!createResult.Succeeded) return createResult;
 
-            if (!createResult.Succeeded)
-                return createResult;
+            await _userManager.AddToRoleAsync(user, "User");
 
-            var addRoleResult = await _userManager.AddToRoleAsync(user, "User");
-                
-            return addRoleResult.Succeeded ? IdentityResult.Success : addRoleResult;
+            
+            await _signinManager.SignInAsync(user, isPersistent: false);
 
+            return IdentityResult.Success;
         }
         public async Task<SignInResult> LoginAsync(LoginDto loginDto)
         {
+            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+
+            if (user == null)
+                return SignInResult.Failed;
+
             var result = await _signinManager.PasswordSignInAsync(
-                loginDto.Email,
+                user.UserName,           
                 loginDto.Password,
                 isPersistent: loginDto.RememberMe,
                 lockoutOnFailure: false
-                );
+            );
             return result;
         }
 
