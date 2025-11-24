@@ -10,5 +10,6 @@ namespace Bookify.Data.Repositories
     public interface IBookingRepository  :IRepository<Booking>
     {
        Task< IEnumerable<Booking>> GetBookingsByUserIdAsync(string userId);
+       Task<IEnumerable<Booking>> GetAllWithDetailsAsync();
     }
 }

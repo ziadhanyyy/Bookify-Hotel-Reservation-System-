@@ -14,5 +14,6 @@ namespace Bookify.Services.Interfaces
         Task<IEnumerable<RoomTypeDto>> GetRoomTypesAsync();
         Task<bool> AddRoomAsync(RoomDto dto);
         Task<IEnumerable<RoomDto>> GetRoomsAsync();
+        Task<IEnumerable<BookingDto>> GetAllBookingsAsync();
     }
 }
