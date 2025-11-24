@@ -15,12 +15,21 @@ namespace Bookify.Core.Entities
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public int Nights { get; set; }
+
+        // Payment Status
+        [Required]
+        [StringLength(50)]
+        public string Status { get; set; } = "Pending";
+
+        // Total price for booking
+        [Required]
+        public decimal TotalAmount { get; set; }
         //navigation property
         public string UserId { get; set; }
         public User User { get; set; }
         public int RoomId { get; set; } 
         
-        public Payment payment { get; set; }
+        public Payment Payment { get; set; }
         public Room Room { get; set; }
 
     }

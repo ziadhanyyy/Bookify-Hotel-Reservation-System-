@@ -20,5 +20,20 @@ namespace Bookify.Data.Context
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) { 
+            base.OnModelCreating(modelBuilder);
+            // Booking
+            modelBuilder.Entity<Booking>()
+                .Property(b => b.TotalAmount)
+                .HasPrecision(18, 2); // 18 digits, 2 decimal places
+
+            // Payment
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2); // 18 digits, 2 decimal places
+
+            modelBuilder.Entity<Payment>()
+                .HasIndex(p => p.TransactionId).IsUnique(); }
     }
 }
