@@ -12,6 +12,10 @@ namespace Bookify.Data.UnitOfWork
         IRoomRepository Rooms { get; }
         IBookingRepository Bookings { get; }
         IPaymentRepository Payments { get; }
+        IReviewRepository Reviews { get;  }
+        IWishlistRepository Wishlists { get;  }
+         IRoomTypeRepository RoomTypes { get; }
         int Complete();
+        Task<int> CompleteAsync();
     }
 }

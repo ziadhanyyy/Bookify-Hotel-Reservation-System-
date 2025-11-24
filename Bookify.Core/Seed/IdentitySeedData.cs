@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Bookify.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,31 @@ namespace Bookify.Core.Seed
                 {
                     await roleManager.CreateAsync(new IdentityRole(r));
                 }
+            }
+
+        }
+        public static async Task SeedAdminAsync(UserManager<User> userManager)
+        {
+            string adminEmail = "admin@bookify.com";
+            string adminPassword = "Admin@123";
+
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                adminUser = new User
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true
+                };
+
+                await userManager.CreateAsync(adminUser, adminPassword);
+            }
+
+            if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
             }
         }
     }

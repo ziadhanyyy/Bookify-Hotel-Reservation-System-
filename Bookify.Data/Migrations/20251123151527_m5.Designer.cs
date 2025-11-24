@@ -4,6 +4,7 @@ using Bookify.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookify.Data.Migrations
 {
     [DbContext(typeof(BookifyDbContext))]
-    partial class BookifyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251123151527_m5")]
+    partial class m5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,15 +48,6 @@ namespace Bookify.Data.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -75,32 +69,22 @@ namespace Bookify.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PaidAt")
+                    b.Property<decimal>("PaymentAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("PaymentStatus")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("TransactionId")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId")
-                        .IsUnique();
-
-                    b.HasIndex("TransactionId")
                         .IsUnique();
 
                     b.ToTable("Payments");
@@ -449,13 +433,13 @@ namespace Bookify.Data.Migrations
 
             modelBuilder.Entity("Bookify.Core.Entities.Payment", b =>
                 {
-                    b.HasOne("Bookify.Core.Entities.Booking", "Booking")
-                        .WithOne("Payment")
+                    b.HasOne("Bookify.Core.Entities.Booking", "booking")
+                        .WithOne("payment")
                         .HasForeignKey("Bookify.Core.Entities.Payment", "BookingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Booking");
+                    b.Navigation("booking");
                 });
 
             modelBuilder.Entity("Bookify.Core.Entities.Review", b =>
@@ -560,7 +544,7 @@ namespace Bookify.Data.Migrations
 
             modelBuilder.Entity("Bookify.Core.Entities.Booking", b =>
                 {
-                    b.Navigation("Payment")
+                    b.Navigation("payment")
                         .IsRequired();
                 });
 

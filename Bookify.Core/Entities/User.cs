@@ -10,8 +10,8 @@ namespace Bookify.Core.Entities
 {
     public class User: IdentityUser
     {
-        public string Country { get; set; }
-        public string Name {  get; set; }
+        public string? Country { get; set; }
+        public string ?Name {  get; set; }
        //nav property
         public ICollection<Booking> Bookings { get; set; }= new List<Booking>();
         public ICollection<Wishlist> Wishlist { get; set; } = new List<Wishlist>();
