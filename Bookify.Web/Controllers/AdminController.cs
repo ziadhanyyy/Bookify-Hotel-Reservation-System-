@@ -18,6 +18,8 @@ namespace Bookify.Web.Controllers
         {
             return View();
         }
+
+        // ------------------- Assign Role -------------------
         [HttpGet]
         public IActionResult AssignRole()
         {
@@ -51,6 +53,7 @@ namespace Bookify.Web.Controllers
                 return View(assignRoleDto);
             }
         }
+        // ------------------- Room Types -------------------
         [HttpGet]
         public IActionResult AddRoomType() => View();
 
@@ -78,12 +81,52 @@ namespace Bookify.Web.Controllers
             var roomTypes = await _adminService.GetRoomTypesAsync();
             return View(roomTypes);
         }
-        
+
+        // ------------------- Rooms -------------------
+        [HttpGet]
+        public async Task<IActionResult> AddRoom()
+        {
+            // To load room types for the dropdown
+
+            ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddRoom(RoomDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
+                return View(dto);
+            }
+
+            var result = await _adminService.AddRoomAsync(dto);
+
+            if (result)
+            {
+                TempData["Success"] = "Room added successfully!";
+                return RedirectToAction("Rooms");
+            }
+
+            TempData["Error"] = "Failed to add room.";
+            return View(dto);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Rooms()
         {
             var rooms = await _adminService.GetRoomsAsync();
             return View(rooms);
+        }
+
+        // ------------------- Bookings -------------------
+        [HttpGet]
+        public async Task<IActionResult> Bookings()
+        {
+            var bookings = await _adminService.GetAllBookingsAsync();
+            return View(bookings);
         }
     }
 }

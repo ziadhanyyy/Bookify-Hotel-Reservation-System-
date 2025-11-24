@@ -14,7 +14,11 @@ using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+builder.Services.Configure<StripeSettings>(options =>
+{
+    options.PublishableKey = Environment.GetEnvironmentVariable("STRIPE_PUBLISHABLE_KEY");
+    options.SecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -22,6 +26,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<BookifyDbContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IPaymentRepository,PaymentRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();

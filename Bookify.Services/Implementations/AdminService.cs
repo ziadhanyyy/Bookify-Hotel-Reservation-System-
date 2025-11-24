@@ -81,5 +81,24 @@ namespace Bookify.Services.Implementations
                 
             });
         }
+
+        public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
+        {
+            var bookings = await _uow.Bookings.GetAllWithDetailsAsync();
+
+            return bookings.Select(b => new BookingDto
+            {
+                Id = b.Id,
+                UserEmail = b.User?.Email ?? "",
+                RoomNumber = b.Room?.RoomNumber ?? "",
+                BookingDate = b.BookingDate,
+                CheckInDate = b.CheckInDate,
+                CheckOutDate = b.CheckOutDate,
+                Nights = b.Nights,
+                TotalAmount = b.TotalAmount,
+                Status = b.Status
+            });
+        }
+
     }
 }
