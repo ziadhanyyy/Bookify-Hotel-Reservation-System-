@@ -17,7 +17,21 @@ namespace Bookify.Data.Repositories
         {
             return  await _context.Rooms.Where(x=>x.IsAvailable==true).ToListAsync();
         }
+        public override async Task<IEnumerable<Room>> GetAllAsync()
+        {
+            return await _context.Rooms
+                                 .Include(r => r.roomType)
+                                 .AsNoTracking()
+                                 .ToListAsync();
+        }
 
-       
+        public override async Task<Room?> GetByIdAsync(int id)
+        {
+            return await _context.Rooms
+                                 .Include(r => r.roomType)
+                                 .FirstOrDefaultAsync(r => r.RoomId == id);
+        }
+
+
     }
 }
