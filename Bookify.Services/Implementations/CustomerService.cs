@@ -99,7 +99,7 @@ namespace Bookify.Services.Implementations
         }
 
         // --- Booking ---
-        public async Task<bool> ConfirmBookingAsync(BookingDto dto)
+        public async Task<int> ConfirmBookingAsync(BookingDto dto)
         {
             var booking = new Booking
             {
@@ -115,7 +115,8 @@ namespace Bookify.Services.Implementations
 
             await _uow.Bookings.AddAsync(booking);
             await _uow.CompleteAsync();
-            return true;
+
+            return booking.Id;  
         }
 
         public async Task<IEnumerable<BookingDto>> GetBookingHistoryAsync(string userId)

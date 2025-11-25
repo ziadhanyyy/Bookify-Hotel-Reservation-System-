@@ -75,6 +75,6 @@ app.MapControllerRoute(
 
 app.Run();
 //to migrate anything
-//Add-Migration m5 -Project Bookify.Data -StartupProject Bookify.Web
+//Add-Migration m8 -Project Bookify.Data -StartupProject Bookify.Web
 
 //Update-Database -Project Bookify.Data -StartupProject Bookify.Web

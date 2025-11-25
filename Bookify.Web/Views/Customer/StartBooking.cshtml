@@ -1,0 +1,54 @@
+﻿@model Bookify.Core.DTOs.BookingDto
+
+<h2>Booking Details</h2>
+
+<form asp-action="ConfirmBooking" method="post">
+
+    <input type="hidden" asp-for="RoomId" />
+    <input type="hidden" asp-for="RoomNumber" />
+
+    <div>
+        <label>Check-In Date</label>
+        <input asp-for="CheckInDate" type="date" class="form-control" />
+    </div>
+
+    <div>
+        <label>Check-Out Date</label>
+        <input asp-for="CheckOutDate" type="date" class="form-control" />
+    </div>
+
+    <div>
+        <label>Nights</label>
+        <input asp-for="Nights" type="number" readonly class="form-control" />
+    </div>
+
+    <div>
+        <label>Total Amount ($)</label>
+        <input asp-for="TotalAmount" type="text" readonly class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Continue to Payment
+    </button>
+
+</form>
+
+<script>
+    const checkIn = document.querySelector("[name='CheckInDate']");
+    const checkOut = document.querySelector("[name='CheckOutDate']");
+    const nights = document.querySelector("[name='Nights']");
+    const total = document.querySelector("[name='TotalAmount']");
+    const pricePerNight = @Model.TotalAmount;
+
+    function update() {
+        const inDate = new Date(checkIn.value);
+        const outDate = new Date(checkOut.value);
+        const diff = (outDate - inDate) / (1000 * 3600 * 24);
+
+        nights.value = diff;
+        total.value = diff * pricePerNight;
+    }
+
+    checkIn.onchange = update;
+    checkOut.onchange = update;
+</script>

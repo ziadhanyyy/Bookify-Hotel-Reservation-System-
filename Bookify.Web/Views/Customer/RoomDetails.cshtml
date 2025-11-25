@@ -6,10 +6,8 @@
 <p>Price: @Model.Price</p>
 <p>Description: @Model.Description</p>
 
-<form asp-action="ConfirmBooking" method="post">
-    <input type="hidden" name="Id" value="@Model.Id" />
-    <input type="hidden" name="RoomId" value="@Model.Id" />
-    <button type="submit">Book Now</button>
-</form>
+<a asp-action="StartBooking" asp-route-roomId="@Model.Id" class="btn btn-primary">
+    Book Now
+</a>
 
 <a asp-action="AvailableRooms">Back to Rooms</a>

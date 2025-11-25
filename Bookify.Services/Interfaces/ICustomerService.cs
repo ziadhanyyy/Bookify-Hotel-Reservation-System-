@@ -21,7 +21,7 @@ namespace Bookify.Services.Interfaces
         Task<IEnumerable<RoomDto>> GetWishlistAsync(string userId);
 
         // --- Booking ---
-        Task<bool> ConfirmBookingAsync(BookingDto dto);
+        Task<int> ConfirmBookingAsync(BookingDto dto);
         Task<IEnumerable<BookingDto>> GetBookingHistoryAsync(string userId);
 
         // --- Reviews ---

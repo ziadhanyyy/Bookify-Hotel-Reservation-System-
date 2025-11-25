@@ -75,13 +75,43 @@ namespace Bookify.Web.Controllers
         public async Task<IActionResult> ConfirmBooking(BookingDto dto)
         {
             dto.UserId = _userManager.GetUserId(User);
-            // Assign logged-in user
             if (dto.UserId == null) return Unauthorized();
 
-            await _customerService.ConfirmBookingAsync(dto);
+            // Calculate nights
+            dto.Nights = (dto.CheckOutDate - dto.CheckInDate).Days;
 
-            // Redirect to PaymentController Checkout action
-            return RedirectToAction("Checkout", "Payment", new { bookingId = dto.Id });
+            // Load the room from DB
+            var room = await _customerService.GetRoomDetailsAsync(dto.RoomId);
+
+            if (room == null)
+                return NotFound("Room not found.");
+
+            
+            dto.TotalAmount = dto.Nights * room.Price;
+
+            int bookingId = await _customerService.ConfirmBookingAsync(dto);
+
+            return RedirectToAction("Checkout", "Payment", new { bookingId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> StartBooking(int roomId)
+        {
+            var room = await _customerService.GetRoomDetailsAsync(roomId);
+            if (room == null) return NotFound();
+
+            var booking = new BookingDto
+            {
+                RoomId = room.Id,
+                RoomNumber = room.RoomNumber,
+                TotalAmount = room.Price,
+                BookingDate = DateTime.Now,
+                CheckInDate = DateTime.Now.Date,
+                CheckOutDate = DateTime.Now.Date.AddDays(1),
+                Nights = 1
+            };
+
+            return View("StartBooking", booking);
         }
 
 
@@ -106,6 +136,7 @@ namespace Bookify.Web.Controllers
             await _customerService.AddReviewAsync(dto);
             return RedirectToAction("BookingHistory");
         }
+
 
        
     }
