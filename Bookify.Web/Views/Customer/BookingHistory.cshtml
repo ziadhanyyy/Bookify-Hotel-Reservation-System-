@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Bookify.Core.DTOs.BookingDto>
+
+<h2>Booking History</h2>
+
+<table>
+    <tr>
+        <th>Room</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Status</th>
+        <th>Review</th>
+    </tr>
+    @foreach (var booking in Model)
+    {
+        <tr>
+            <td>@booking.RoomNumber</td>
+            <td>@booking.CheckInDate.ToShortDateString()</td>
+            <td>@booking.CheckOutDate.ToShortDateString()</td>
+            <td>@booking.Status</td>
+            <td>
+                <form asp-action="AddReview" method="post">
+                    <input type="hidden" name="BookingId" value="@booking.Id" />
+                    <textarea name="Content" placeholder="Write a review..."></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

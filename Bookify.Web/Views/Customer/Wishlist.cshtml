@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Bookify.Core.DTOs.RoomDto>
+
+<h2>My Wishlist</h2>
+
+<table>
+    <tr>
+        <th>Room Name</th>
+        <th>Type</th>
+        <th>Price</th>
+    </tr>
+    @foreach (var room in Model)
+    {
+        <tr>
+            <td>@room.Name</td>
+            <td>@room.Type</td>
+            <td>@room.Price</td>
+        </tr>
+    }
+</table>
+
+<a asp-action="AvailableRooms">Back to Rooms</a>

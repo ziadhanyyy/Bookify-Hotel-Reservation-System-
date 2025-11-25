@@ -1,0 +1,15 @@
+﻿@model Bookify.Core.DTOs.RoomDto
+
+<h2>@Model.Name Details</h2>
+
+<p>Type: @Model.Type</p>
+<p>Price: @Model.Price</p>
+<p>Description: @Model.Description</p>
+
+<form asp-action="ConfirmBooking" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <input type="hidden" name="RoomId" value="@Model.Id" />
+    <button type="submit">Book Now</button>
+</form>
+
+<a asp-action="AvailableRooms">Back to Rooms</a>

@@ -38,6 +38,9 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<BookifyDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ICustomerService, Bookify.Services.Implementations.CustomerService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {

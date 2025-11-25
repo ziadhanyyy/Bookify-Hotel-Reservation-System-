@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Bookify.Core.DTOs.RoomDto>
+
+<h2>Available Rooms</h2>
+
+<form method="get" asp-action="SearchRooms">
+    <input type="text" name="query" placeholder="Search rooms..." />
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <tr>
+        <th>Room Name</th>
+        <th>Type</th>
+        <th>Price</th>
+        <th>Details</th>
+    </tr>
+    @foreach (var room in Model)
+    {
+        <tr>
+            <td>@room.Name</td>
+            <td>@room.Type</td>
+            <td>@room.Price</td>
+            <td>
+                <a asp-action="RoomDetails" asp-route-roomId="@room.Id">View</a> |
+                <form asp-action="AddToWishlist" method="post" style="display:inline;">
+                    <input type="hidden" name="roomId" value="@room.Id" />
+                    <button type="submit">Add to Wishlist</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+

@@ -9,7 +9,9 @@ namespace Bookify.Core.DTOs
     public class BookingDto
     {
         public int Id { get; set; }
+        public string UserId { get; set; }
         public string UserEmail { get; set; }
+        public int RoomId { get; set; }
         public string RoomNumber { get; set; }
         public DateTime BookingDate { get; set; }
         public DateTime CheckInDate { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Bookify.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,8 @@ namespace Bookify.Data.Repositories
     public interface IRoomRepository:IRepository<Room>
     {
         Task<IEnumerable<Room>> GetAvailableRoomsAsync();
+       Task<IEnumerable<Room>> GetAllAsync();
+
+        Task<Room?> GetByIdAsync(int id);
     }
 }

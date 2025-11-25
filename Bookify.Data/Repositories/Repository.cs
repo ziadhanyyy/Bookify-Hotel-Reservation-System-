@@ -35,7 +35,7 @@ namespace Bookify.Data.Repositories
         }
         
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async virtual Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.AsNoTracking().ToListAsync();
         }
@@ -44,7 +44,7 @@ namespace Bookify.Data.Repositories
         {
             _dbSet.Update(entity);
         }
-        public async Task<T?> GetByIdAsync(int id)
+        public async virtual Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
