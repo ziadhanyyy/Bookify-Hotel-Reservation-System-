@@ -46,13 +46,14 @@ namespace Bookify.Web.Controllers
 
         // --- Wishlist ---
         [HttpPost]
-        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToWishlist(int roomId)
         {
             var userId = _userManager.GetUserId(User);
             if (userId == null) return Unauthorized();
 
-            Console.WriteLine($"DEBUG: UserId={userId}, RoomId={roomId}"); // تحقق من القيمة
+            // Debug log:
+            Console.WriteLine($"DEBUG: AddToWishlist userId={userId}, roomId={roomId}");
 
             await _customerService.AddToWishlistAsync(userId, roomId);
             return RedirectToAction("Wishlist");
@@ -77,10 +78,10 @@ namespace Bookify.Web.Controllers
             dto.UserId = _userManager.GetUserId(User);
             if (dto.UserId == null) return Unauthorized();
 
-            // Calculate nights
+            
             dto.Nights = (dto.CheckOutDate - dto.CheckInDate).Days;
 
-            // Load the room from DB
+            
             var room = await _customerService.GetRoomDetailsAsync(dto.RoomId);
 
             if (room == null)

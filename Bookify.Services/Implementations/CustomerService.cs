@@ -77,8 +77,13 @@ namespace Bookify.Services.Implementations
 
 
         // --- Wishlist ---
+        
         public async Task<bool> AddToWishlistAsync(string userId, int roomId)
         {
+            
+            var exists = (await _uow.Wishlists.FindAsync(w => w.UserId == userId && w.RoomId == roomId)).Any();
+            if (exists) return true;
+
             var wishlist = new Wishlist { UserId = userId, RoomId = roomId };
             await _uow.Wishlists.AddAsync(wishlist);
             await _uow.CompleteAsync();
@@ -89,12 +94,22 @@ namespace Bookify.Services.Implementations
         {
             var wishlists = await _uow.Wishlists.FindAsync(w => w.UserId == userId);
             var rooms = new List<RoomDto>();
+
             foreach (var w in wishlists)
             {
+                
                 var room = await _uow.Rooms.GetByIdAsync(w.RoomId);
-                if (room != null)
-                    rooms.Add(new RoomDto { RoomNumber = room.RoomNumber, RoomTypeId = room.RoomTypeId });
+                if (room == null) continue;
+
+                rooms.Add(new RoomDto
+                {
+                    Id = room.RoomId,
+                    RoomNumber = room.RoomNumber,
+                    RoomTypeId = room.RoomTypeId,
+                    
+                });
             }
+
             return rooms;
         }
 

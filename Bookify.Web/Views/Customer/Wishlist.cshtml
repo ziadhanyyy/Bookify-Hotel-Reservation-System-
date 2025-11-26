@@ -4,16 +4,16 @@
 
 <table>
     <tr>
-        <th>Room Name</th>
-        <th>Type</th>
-        <th>Price</th>
+        <th>Room Number</th>
+        <th>Type Number</th>
+        
     </tr>
     @foreach (var room in Model)
     {
         <tr>
-            <td>@room.Name</td>
-            <td>@room.Type</td>
-            <td>@room.Price</td>
+            <td>@room.RoomNumber</td>
+            <td>@room.RoomTypeId</td>
+            
         </tr>
     }
 </table>
