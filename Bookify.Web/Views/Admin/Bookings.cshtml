@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Bookify.Core.DTOs.BookingDto>
+
+<h2>All Bookings</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>User Email</th>
+            <th>Room</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Nights</th>
+            <th>Total</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.UserEmail</td>
+                <td>@b.RoomNumber</td>
+                <td>@b.CheckInDate.ToShortDateString()</td>
+                <td>@b.CheckOutDate.ToShortDateString()</td>
+                <td>@b.Nights</td>
+                <td>@b.TotalAmount</td>
+                <td>@b.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

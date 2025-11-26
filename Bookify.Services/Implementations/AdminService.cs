@@ -37,6 +37,7 @@ namespace Bookify.Services.Implementations
         {
             var roomType = new RoomType
             {
+                
                 Name = dto.Name,
                 Description = dto.Description,
                 PricePerNight = dto.PricePerNight,
@@ -44,7 +45,7 @@ namespace Bookify.Services.Implementations
 
     };
             await _uow.RoomTypes.AddAsync(roomType);
-             _uow.Complete();
+             await _uow.CompleteAsync();
             return true;
         }
 
@@ -57,7 +58,7 @@ namespace Bookify.Services.Implementations
                 IsAvailable = true
             };
             await _uow.Rooms.AddAsync(room);
-             _uow.Complete();
+             await _uow.CompleteAsync();
             return true;
         }
         public async Task<IEnumerable<RoomTypeDto>> GetRoomTypesAsync()
@@ -65,7 +66,7 @@ namespace Bookify.Services.Implementations
             var roomTypes = await _uow.RoomTypes.GetAllAsync();
             return roomTypes.Select(rt => new RoomTypeDto
             {
-               
+                Id = rt.RoomTypeId,
                 Name = rt.Name,
                 Description = rt.Description,
                 PricePerNight = rt.PricePerNight

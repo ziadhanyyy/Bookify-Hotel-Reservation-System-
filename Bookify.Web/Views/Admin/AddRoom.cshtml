@@ -1,0 +1,22 @@
+﻿@model Bookify.Core.DTOs.RoomDto
+
+<h2>Add Room</h2>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="AddRoom" method="post">
+    <div>
+        <label>Room Number</label>
+        <input asp-for="RoomNumber" class="form-control" />
+    </div>
+
+    <div>
+        <label>Room Type</label>
+        <select asp-for="RoomTypeId" class="form-control">
+            @foreach (var rt in ViewBag.RoomTypes)
+            {
+                <option value="@rt.Id">@rt.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+</form>

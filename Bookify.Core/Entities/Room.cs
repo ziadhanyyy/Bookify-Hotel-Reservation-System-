@@ -14,7 +14,7 @@ namespace Bookify.Core.Entities
     public string RoomNumber { get; set; }
     public int RoomTypeId { get; set; }
     public bool IsAvailable { get; set; }
-    public string ImageURL { get; set; }
+    public string? ImageURL { get; set; }
 
     public RoomType roomType { get; set; }
    
