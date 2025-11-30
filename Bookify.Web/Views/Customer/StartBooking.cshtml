@@ -131,7 +131,23 @@
         // Set minimum date to today
         const today = new Date().toISOString().split('T')[0];
         checkIn.min = today;
-        checkOut.min = today;
+
+        // 🔥 NEW FUNCTION: enforce checkout must be at least +1 day
+        function enforceMinimumCheckout() {
+            if (!checkIn.value) return;
+
+            const inDate = new Date(checkIn.value);
+            const minOutDate = new Date(inDate);
+            minOutDate.setDate(minOutDate.getDate() + 1);
+
+            const minOutDateString = minOutDate.toISOString().split('T')[0];
+            checkOut.min = minOutDateString;
+
+            // Reset checkout if invalid
+            if (checkOut.value && new Date(checkOut.value) < minOutDate) {
+                checkOut.value = "";
+            }
+        }
 
         function updateBooking() {
             if (!checkIn.value || !checkOut.value) {
@@ -144,7 +160,7 @@
 
             const inDate = new Date(checkIn.value);
             const outDate = new Date(checkOut.value);
-            
+
             if (outDate <= inDate) {
                 nights.value = 0;
                 total.value = 0;
@@ -159,22 +175,24 @@
 
             nights.value = diffDays;
             total.value = totalAmount.toFixed(2);
-            
+
             document.getElementById('nightsDisplay').textContent = diffDays;
             document.getElementById('totalAmountDisplay').textContent = totalAmount.toFixed(2);
         }
 
-        checkIn.addEventListener('change', function() {
-            if (checkOut.value && new Date(checkOut.value) <= new Date(checkIn.value)) {
-                checkOut.value = '';
-            }
-            checkOut.min = checkIn.value;
+        // Apply rule when check-in changes
+        checkIn.addEventListener('change', function () {
+            enforceMinimumCheckout();
+            updateBooking();
+        });
+
+        // Apply rule when page loads 🔥 (This fixes your problem)
+        window.addEventListener('load', function () {
+            enforceMinimumCheckout();
             updateBooking();
         });
 
         checkOut.addEventListener('change', updateBooking);
-
-        // Initial update
-        updateBooking();
     </script>
 }
+

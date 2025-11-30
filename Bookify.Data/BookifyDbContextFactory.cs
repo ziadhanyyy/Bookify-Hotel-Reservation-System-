@@ -14,7 +14,7 @@ namespace Bookify.Data
         public BookifyDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<BookifyDbContext>();
-            optionsBuilder.UseSqlServer("Server=DESKTOP-T14VMMB;Database=BookifyDB2;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-D9PU7O2;Database=BookifyDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
             return new BookifyDbContext(optionsBuilder.Options);
         }
