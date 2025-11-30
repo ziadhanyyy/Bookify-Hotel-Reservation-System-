@@ -17,6 +17,7 @@ namespace Bookify.Services.Interfaces
         Task<IEnumerable<BookingDto>> GetAllBookingsAsync();
         Task<bool> DeleteRoomAsync(int roomId);
         Task<bool> DeleteRoomTypeAsync(int roomTypeId);
+        Task<DashboardStatsDto> GetDashboardStatsAsync();
 
 
     }

@@ -127,7 +127,23 @@ namespace Bookify.Services.Implementations
             await _uow.CompleteAsync();
             return true;
         }
+        public async Task<DashboardStatsDto> GetDashboardStatsAsync()
+        {
+           
 
+            var totalRooms = (await _uow.Rooms.GetAllAsync()).Count();
+            var totalBookings = (await _uow.Bookings.GetAllAsync()).Count();
+            var totalRoomTypes = (await _uow.RoomTypes.GetAllAsync()).Count();
+
+
+            return new DashboardStatsDto
+            {
+                TotalRooms = totalRooms,
+                TotalBookings = totalBookings,
+                RoomTypes = totalRoomTypes,
+                
+            };
+        }
 
     }
 }

@@ -17,9 +17,10 @@ namespace Bookify.Web.Controllers
             _customerService = customerService;
         }
         [HttpGet]
-        public IActionResult Index()
+        public  async Task<IActionResult> Index()
         {
-            return View();
+            var stats = await _adminService.GetDashboardStatsAsync();
+            return View(stats);
         }
 
         // ------------------- Assign Role -------------------
