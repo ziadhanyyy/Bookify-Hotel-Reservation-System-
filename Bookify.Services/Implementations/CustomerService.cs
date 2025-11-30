@@ -43,25 +43,44 @@ namespace Bookify.Services.Implementations
 
         public async Task<IEnumerable<RoomDto>> SearchRoomsAsync(string query)
         {
-            var rooms = await _uow.Rooms.GetAllAsync();
+            if (string.IsNullOrWhiteSpace(query))
+                return await GetAvailableRoomsAsync();
 
-            return rooms.Where(r => r.RoomNumber.Contains(query))
-                        .Select(r => new RoomDto
-                        {
-                            Id = r.RoomId,
-                            Name = r.roomType?.Name ?? "No Type",
-                            RoomNumber = r.RoomNumber,
-                            Type = r.roomType?.Name ?? "No Type",
-                            Price = r.roomType?.PricePerNight ?? 0,
-                            RoomTypeId = r.RoomTypeId,
-                            Description = r.roomType?.Description ?? "",
-                            ImageURL = r.ImageURL
-                        });
+            query = query.Trim().ToLowerInvariant();
+
+            var rooms = await _uow.Rooms.GetAllAsync(); 
+
+            var filtered = rooms
+                .Where(r => r.IsAvailable) 
+                .Where(r =>
+                {
+                    
+                    var roomNumber = (r.RoomNumber ?? "").ToLowerInvariant();
+                    var typeName = (r.roomType?.Name ?? "").ToLowerInvariant();
+                    var typeDesc = (r.roomType?.Description ?? "").ToLowerInvariant();
+                    var roomName = (r.roomType?.Name ?? "").ToLowerInvariant(); 
+
+                    return roomNumber.Contains(query)
+                        || typeName.Contains(query)
+                        || typeDesc.Contains(query)
+                        || roomName.Contains(query);
+                });
+
+            return filtered.Select(r => new RoomDto
+            {
+                Id = r.RoomId,
+                Name = r.roomType?.Name ?? "No Type",
+                RoomNumber = r.RoomNumber,
+                Type = r.roomType?.Name ?? "No Type",
+                Price = r.roomType?.PricePerNight ?? 0,
+                RoomTypeId = r.RoomTypeId,
+                Description = r.roomType?.Description ?? "",
+                ImageURL = r.ImageURL
+            });
         }
-
         public async Task<RoomDto> GetRoomDetailsAsync(int roomId)
         {
-            var room = await _uow.Rooms.GetByIdAsync(roomId); // هنا بنجيب الغرفة مباشرة من UnitOfWork
+            var room = await _uow.Rooms.GetByIdAsync(roomId); 
             if (room == null) return null;
 
             return new RoomDto

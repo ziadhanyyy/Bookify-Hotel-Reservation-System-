@@ -23,20 +23,23 @@ namespace Bookify.Web.Controllers
 
         // --- Rooms ---
         [HttpGet]
-        public async Task<IActionResult> AvailableRooms()
+        public async Task<IActionResult> AvailableRooms(string query)
         {
-            var rooms = await _customerService.GetAvailableRoomsAsync();
+            IEnumerable<RoomDto> rooms;
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                rooms = await _customerService.GetAvailableRoomsAsync();
+            }
+            else
+            {
+                rooms = await _customerService.SearchRoomsAsync(query);
+            }
+
             return View(rooms);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> SearchRooms(string query)
-        {
-            var rooms = await _customerService.SearchRoomsAsync(query);
-            return View("AvailableRooms", rooms);
-        }
-
-        [HttpGet]
+        
         [HttpGet]
         public async Task<IActionResult> RoomDetails(int id)
         {
