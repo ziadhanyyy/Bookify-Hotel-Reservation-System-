@@ -1,22 +1,90 @@
 ﻿@model Bookify.Core.DTOs.RoomDto
+@{
+    ViewData["Title"] = "Add Room";
+    Layout = "_AdminLayout";
+}
 
-<h2>Add Room</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
-<form asp-action="AddRoom" method="post">
+<div class="admin-page-header">
     <div>
-        <label>Room Number</label>
-        <input asp-for="RoomNumber" class="form-control" />
+        <h2><i class="fas fa-plus-circle"></i> Add New Room</h2>
+        <p class="text-secondary mb-0">Create a new room in the system</p>
     </div>
-
     <div>
-        <label>Room Type</label>
-        <select asp-for="RoomTypeId" class="form-control">
-            @foreach (var rt in ViewBag.RoomTypes)
-            {
-                <option value="@rt.Id">@rt.Name</option>
+        <a asp-action="Rooms" class="btn btn-admin-outline">
+            <i class="fas fa-arrow-left"></i> Back to Rooms
+        </a>
+    </div>
+</div>
+
+<div class="admin-form-card">
+    <div asp-validation-summary="All" class="alert alert-danger"></div>
+    
+    <form asp-action="AddRoom" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        
+        <div class="form-group">
+            <label asp-for="RoomNumber" class="form-label">
+                <i class="fas fa-hashtag"></i> Room Number
+            </label>
+            <input asp-for="RoomNumber" class="form-control" placeholder="Enter room number" />
+            <span asp-validation-for="RoomNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="RoomTypeId" class="form-label">
+                <i class="fas fa-tag"></i> Room Type
+            </label>
+            <select asp-for="RoomTypeId" class="form-select">
+                <option value="">-- Select Room Type --</option>
+                @if (ViewBag.RoomTypes != null)
+                {
+                    @foreach (var rt in ViewBag.RoomTypes)
+                    {
+                        <option value="@rt.Id">@rt.Name - $@rt.PricePerNight.ToString("F2")/night</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">
+                <i class="fas fa-image"></i> Room Image
+            </label>
+            <input type="file" name="roomImage" id="roomImage" class="form-control" accept="image/*" />
+            <small class="form-text text-muted">Upload a high-quality image of the room (JPG, PNG, max 5MB)</small>
+            <div id="imagePreview" class="mt-3" style="display: none;">
+                <img id="previewImg" src="" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px; border: 2px solid var(--border-light);" />
+            </div>
+        </div>
+
+        <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn btn-admin">
+                <i class="fas fa-save"></i> Save Room
+            </button>
+            <a asp-action="Rooms" class="btn btn-admin-outline">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Image Preview
+        document.getElementById('roomImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
             }
-        </select>
-    </div>
-
-    <button type="submit" class="btn btn-success">Save</button>
-</form>
+        });
+    </script>
+}

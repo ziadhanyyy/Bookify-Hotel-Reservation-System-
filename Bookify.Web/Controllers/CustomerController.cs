@@ -37,12 +37,18 @@ namespace Bookify.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RoomDetails(int roomId)
+        [HttpGet]
+        public async Task<IActionResult> RoomDetails(int id)
         {
-            var room = await _customerService.GetRoomDetailsAsync(roomId);
+            var room = await _customerService.GetRoomDetailsAsync(id);
             if (room == null) return NotFound();
+
+          
+            room.Reviews = await _customerService.GetRoomReviewsAsync(id);
+
             return View(room);
         }
+
 
         // --- Wishlist ---
         [HttpPost]
@@ -128,17 +134,24 @@ namespace Bookify.Web.Controllers
 
         // --- Reviews ---
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddReview(ReviewDto dto)
         {
-            dto.UserId =_userManager.GetUserId(User);
+            dto.UserId = _userManager.GetUserId(User);
+            dto.CreatedAt = DateTime.Now;
 
             if (dto.UserId == null) return Unauthorized();
+
+            // Debug
+            Console.WriteLine($"RoomId={dto.RoomId}, BookingId={dto.BookingId}, Comment={dto.Comment}");
 
             await _customerService.AddReviewAsync(dto);
             return RedirectToAction("BookingHistory");
         }
 
 
-       
+
+
+
     }
 }

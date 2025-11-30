@@ -17,5 +17,7 @@ namespace Bookify.Core.DTOs
         public int RoomTypeId { get; set; }
         public int Id { get; set; }            
         public string? Description { get; set; }
+        public string? ImageURL { get; set; }
+        public List<ReviewDto> Reviews { get; set; } = new();
     }
 }

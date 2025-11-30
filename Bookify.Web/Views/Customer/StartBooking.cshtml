@@ -1,54 +1,180 @@
 ﻿@model Bookify.Core.DTOs.BookingDto
+@{
+    ViewData["Title"] = "Book Room";
+}
 
-<h2>Booking Details</h2>
-
-<form asp-action="ConfirmBooking" method="post">
-
-    <input type="hidden" asp-for="RoomId" />
-    <input type="hidden" asp-for="RoomNumber" />
-
-    <div>
-        <label>Check-In Date</label>
-        <input asp-for="CheckInDate" type="date" class="form-control" />
+<div class="container">
+    <div class="mb-4">
+        <h1 class="mb-2"><i class="fas fa-calendar-check"></i> Book Your Room</h1>
+        <p class="text-secondary">Select your check-in and check-out dates</p>
     </div>
 
-    <div>
-        <label>Check-Out Date</label>
-        <input asp-for="CheckOutDate" type="date" class="form-control" />
+    <div class="row">
+        <!-- Booking Form -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white;">
+                    <h4 class="mb-0"><i class="fas fa-calendar-alt"></i> Booking Details</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ConfirmBooking" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        @Html.AntiForgeryToken()
+                        
+                        <input type="hidden" asp-for="RoomId" />
+                        <input type="hidden" asp-for="RoomNumber" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CheckInDate" class="form-label">
+                                    <i class="fas fa-sign-in-alt"></i> Check-In Date
+                                </label>
+                                <input asp-for="CheckInDate" type="date" class="form-control" required />
+                                <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CheckOutDate" class="form-label">
+                                    <i class="fas fa-sign-out-alt"></i> Check-Out Date
+                                </label>
+                                <input asp-for="CheckOutDate" type="date" class="form-control" required />
+                                <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nights" class="form-label">
+                                    <i class="fas fa-moon"></i> Number of Nights
+                                </label>
+                                <input asp-for="Nights" type="number" readonly class="form-control" style="background-color: var(--bg-color);" />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TotalAmount" class="form-label">
+                                    <i class="fas fa-dollar-sign"></i> Total Amount
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input asp-for="TotalAmount" type="text" readonly class="form-control" style="background-color: var(--bg-color); font-weight: bold; font-size: 1.2rem; color: var(--success-color);" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> Please review your booking details before proceeding to payment.
+                        </div>
+
+                        <div class="d-flex gap-3 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card"></i> Continue to Payment
+                            </button>
+                            <a asp-action="AvailableRooms" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="col-lg-4">
+            <div class="card" style="position: sticky; top: 20px;">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-receipt"></i> Booking Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Room Number:</strong>
+                        <p class="mb-0">@Model.RoomNumber</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mb-3">
+                        <strong>Price Per Night:</strong>
+                        <p class="mb-0" style="color: var(--primary-color); font-size: 1.1rem;">
+                            $<span id="pricePerNight">@Model.TotalAmount</span>
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Nights:</strong>
+                        <p class="mb-0"><span id="nightsDisplay">1</span> night(s)</p>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <strong style="font-size: 1.2rem;">Total:</strong>
+                        <span id="totalDisplay" style="font-size: 1.5rem; font-weight: bold; color: var(--success-color);">
+                            $<span id="totalAmountDisplay">@Model.TotalAmount</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div>
-        <label>Nights</label>
-        <input asp-for="Nights" type="number" readonly class="form-control" />
-    </div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const checkIn = document.querySelector("[name='CheckInDate']");
+        const checkOut = document.querySelector("[name='CheckOutDate']");
+        const nights = document.querySelector("[name='Nights']");
+        const total = document.querySelector("[name='TotalAmount']");
+        const pricePerNight = parseFloat(@Model.TotalAmount) || 0;
 
-    <div>
-        <label>Total Amount ($)</label>
-        <input asp-for="TotalAmount" type="text" readonly class="form-control" />
-    </div>
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        checkIn.min = today;
+        checkOut.min = today;
 
-    <button type="submit" class="btn btn-primary">
-        Continue to Payment
-    </button>
+        function updateBooking() {
+            if (!checkIn.value || !checkOut.value) {
+                nights.value = 0;
+                total.value = 0;
+                document.getElementById('nightsDisplay').textContent = '0';
+                document.getElementById('totalAmountDisplay').textContent = '0.00';
+                return;
+            }
 
-</form>
+            const inDate = new Date(checkIn.value);
+            const outDate = new Date(checkOut.value);
+            
+            if (outDate <= inDate) {
+                nights.value = 0;
+                total.value = 0;
+                document.getElementById('nightsDisplay').textContent = '0';
+                document.getElementById('totalAmountDisplay').textContent = '0.00';
+                return;
+            }
 
-<script>
-    const checkIn = document.querySelector("[name='CheckInDate']");
-    const checkOut = document.querySelector("[name='CheckOutDate']");
-    const nights = document.querySelector("[name='Nights']");
-    const total = document.querySelector("[name='TotalAmount']");
-    const pricePerNight = @Model.TotalAmount;
+            const diffTime = outDate - inDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const totalAmount = diffDays * pricePerNight;
 
-    function update() {
-        const inDate = new Date(checkIn.value);
-        const outDate = new Date(checkOut.value);
-        const diff = (outDate - inDate) / (1000 * 3600 * 24);
+            nights.value = diffDays;
+            total.value = totalAmount.toFixed(2);
+            
+            document.getElementById('nightsDisplay').textContent = diffDays;
+            document.getElementById('totalAmountDisplay').textContent = totalAmount.toFixed(2);
+        }
 
-        nights.value = diff;
-        total.value = diff * pricePerNight;
-    }
+        checkIn.addEventListener('change', function() {
+            if (checkOut.value && new Date(checkOut.value) <= new Date(checkIn.value)) {
+                checkOut.value = '';
+            }
+            checkOut.min = checkIn.value;
+            updateBooking();
+        });
 
-    checkIn.onchange = update;
-    checkOut.onchange = update;
-</script>
+        checkOut.addEventListener('change', updateBooking);
+
+        // Initial update
+        updateBooking();
+    </script>
+}

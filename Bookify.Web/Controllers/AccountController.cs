@@ -64,11 +64,20 @@ namespace Bookify.Web.Controllers
 
 
             if (result.Succeeded)
+            {
+                // Check if user is Admin and redirect to Admin Dashboard
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                
+                // Regular users go to Home page
                 return RedirectToAction("Index", "Home");
+            }
 
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return RedirectToAction("Index","Home");
+            return View(dto);
         }
 
         [Authorize]

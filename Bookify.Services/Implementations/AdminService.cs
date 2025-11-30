@@ -55,7 +55,8 @@ namespace Bookify.Services.Implementations
             {
                 RoomNumber = dto.RoomNumber,
                 RoomTypeId = dto.RoomTypeId,
-                IsAvailable = true
+                IsAvailable = true,
+                ImageURL = dto.ImageURL
             };
             await _uow.Rooms.AddAsync(room);
              await _uow.CompleteAsync();
@@ -77,9 +78,10 @@ namespace Bookify.Services.Implementations
             var rooms = await _uow.Rooms.GetAllAsync();
             return rooms.Select(r => new RoomDto
             {
+                Id = r.RoomId,
                 RoomNumber = r.RoomNumber,
                 RoomTypeId = r.RoomTypeId,
-                
+                ImageURL = r.ImageURL
             });
         }
 
@@ -100,6 +102,32 @@ namespace Bookify.Services.Implementations
                 Status = b.Status
             });
         }
+        public async Task<bool> DeleteRoomAsync(int roomId)
+        {
+            var room = await _uow.Rooms.GetByIdAsync(roomId);
+            if (room == null)
+                return false;
+
+            _uow.Rooms.Delete(room);
+            await _uow.CompleteAsync();
+            return true;
+        }
+        public async Task<bool> DeleteRoomTypeAsync(int roomTypeId)
+        {
+            var roomType = await _uow.RoomTypes.GetByIdAsync(roomTypeId);
+            if (roomType == null)
+                return false;
+
+            
+            var roomsWithType = (await _uow.Rooms.FindAsync(r => r.RoomTypeId == roomTypeId)).ToList();
+            if (roomsWithType.Any())
+                return false; 
+
+            _uow.RoomTypes.Delete(roomType);
+            await _uow.CompleteAsync();
+            return true;
+        }
+
 
     }
 }

@@ -2,39 +2,109 @@
     ViewData["Title"] = "Home";
 }
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Bookify</a>
-        <div class="navbar-nav ms-auto">
-            @if (User.Identity.IsAuthenticated)
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to Bookify</h1>
+        <p class="hero-subtitle">Your perfect getaway awaits. Discover luxury accommodations and create unforgettable memories.</p>
+        <div class="hero-buttons">
+            @if (User?.Identity != null && User.Identity.IsAuthenticated)
             {
-                <span class="navbar-text me-3">Hello, @User.Identity.Name!</span>
-                <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-danger">Logout</button>
-                </form>
+                <a asp-controller="Customer" asp-action="AvailableRooms" class="btn btn-lg hero-btn-primary">
+                    <i class="fas fa-bed"></i> Browse Rooms
+                </a>
+                <a asp-controller="Customer" asp-action="BookingHistory" class="btn btn-lg hero-btn-secondary">
+                    <i class="fas fa-history"></i> My Bookings
+                </a>
             }
             else
             {
-                <a asp-action="Register" asp-controller="Account" class="btn btn-outline-primary me-2">Register</a>
-                <a asp-action="Login" asp-controller="Account" class="btn btn-outline-secondary">Login</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-lg hero-btn-primary">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-lg hero-btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
             }
         </div>
     </div>
-</nav>
+</section>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <h1>Welcome to Bookify</h1>
-            <p>This is the home page. @if (User.Identity.IsAuthenticated) {
-            <span>You are logged in as @User.Identity.Name.</span>
-                        } else
-            {
-
-                <span>Please register or login to continue.</span>
-            }
-</p>
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Why Choose Bookify?</h2>
+            <p class="text-secondary">Experience the best in hospitality and comfort</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <h3>Luxury Rooms</h3>
+                <p>Spacious and elegantly designed rooms with modern amenities for your comfort and relaxation.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <h3>Free WiFi</h3>
+                <p>Stay connected with high-speed internet access available throughout the property.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Fine Dining</h3>
+                <p>Enjoy exquisite cuisine at our on-site restaurants featuring world-class chefs.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-swimming-pool"></i>
+                </div>
+                <h3>Recreation</h3>
+                <p>Relax by the pool, work out in our fitness center, or enjoy our spa services.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure Booking</h3>
+                <p>Book with confidence knowing your reservation is secure and protected.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Our dedicated team is available around the clock to assist you with anything you need.</p>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Call to Action Section -->
+@if (User?.Identity == null || !User.Identity.IsAuthenticated)
+{
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Book Your Stay?</h2>
+            <p>Join thousands of satisfied guests and experience the Bookify difference.</p>
+            <div class="cta-buttons">
+                <a asp-controller="Account" asp-action="Register" class="btn">
+                    <i class="fas fa-user-plus"></i> Create Free Account
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn" style="background-color: transparent; color: white; border: 2px solid white;">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+}

@@ -1,21 +1,91 @@
 ﻿@model IEnumerable<Bookify.Core.DTOs.RoomDto>
+@{
+    ViewData["Title"] = "My Wishlist";
+}
 
-<h2>My Wishlist</h2>
+<div class="container">
+    <div class="mb-4">
+        <h1 class="mb-2">
+            <i class="fas fa-heart" style="color: var(--danger-color);"></i> My Wishlist
+        </h1>
+        <p class="text-secondary">Your saved favorite rooms</p>
+    </div>
 
-<table>
-    <tr>
-        <th>Room Number</th>
-        <th>Type Number</th>
-        
-    </tr>
-    @foreach (var room in Model)
+    @if (Model != null && Model.Any())
     {
-        <tr>
-            <td>@room.RoomNumber</td>
-            <td>@room.RoomTypeId</td>
-            
-        </tr>
+        <div class="rooms-grid">
+            @foreach (var room in Model)
+            {
+                <div class="room-card">
+                    <!-- Room Image -->
+                    <div class="room-card-image">
+                        @if (!string.IsNullOrEmpty(room.ImageURL))
+                        {
+                            <img src="@room.ImageURL" alt="@room.Name" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        }
+                        else
+                        {
+                            <img src="/images/unsplash_CepDpEiALqM.png" alt="@room.Name" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        }
+                        <i class="fas fa-bed" style="display: none;"></i>
+                    </div>
+                    
+                    <!-- Room Details -->
+                    <div class="room-card-body">
+                        <h3 class="room-card-title">@room.Name</h3>
+                        <div class="room-card-type">
+                            <i class="fas fa-tag"></i> Room #@room.RoomNumber
+                        </div>
+                        
+                        @if (!string.IsNullOrEmpty(room.Description))
+                        {
+                            <p class="room-card-description">@room.Description</p>
+                        }
+                        else
+                        {
+                            <p class="room-card-description">Experience comfort and luxury in this beautifully designed room.</p>
+                        }
+                        
+                        @if (room.Price > 0)
+                        {
+                            <div class="room-card-price">
+                                $@room.Price.ToString("F2")
+                                <small>/night</small>
+                            </div>
+                        }
+                        
+                        <div class="room-card-actions">
+                            <a asp-action="RoomDetails" asp-controller="Customer" asp-route-id="@room.Id" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                            <a asp-action="AvailableRooms" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left"></i> Browse More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
-</table>
+    else
+    {
+        <div class="empty-rooms">
+            <i class="fas fa-heart-broken"></i>
+            <h3>Your Wishlist is Empty</h3>
+            <p>Start exploring our amazing rooms and add your favorites to your wishlist!</p>
+            <a asp-action="AvailableRooms" class="btn btn-primary mt-3">
+                <i class="fas fa-bed"></i> Browse Available Rooms
+            </a>
+        </div>
+    }
+</div>
 
-<a asp-action="AvailableRooms">Back to Rooms</a>
+<style>
+    .room-card-actions form {
+        flex: 0 0 auto;
+    }
+    
+    .room-card-actions .btn {
+        min-width: auto;
+    }
+</style>

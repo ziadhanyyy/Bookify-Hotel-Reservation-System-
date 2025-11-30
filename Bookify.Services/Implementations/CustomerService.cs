@@ -36,7 +36,8 @@ namespace Bookify.Services.Implementations
                             Type = r.roomType?.Name ?? "No Type",
                             Price = r.roomType?.PricePerNight ?? 0,
                             RoomTypeId = r.RoomTypeId,
-                            Description = r.roomType?.Description ?? ""
+                            Description = r.roomType?.Description ?? "",
+                            ImageURL = r.ImageURL
                         });
         }
 
@@ -53,7 +54,8 @@ namespace Bookify.Services.Implementations
                             Type = r.roomType?.Name ?? "No Type",
                             Price = r.roomType?.PricePerNight ?? 0,
                             RoomTypeId = r.RoomTypeId,
-                            Description = r.roomType?.Description ?? ""
+                            Description = r.roomType?.Description ?? "",
+                            ImageURL = r.ImageURL
                         });
         }
 
@@ -70,7 +72,8 @@ namespace Bookify.Services.Implementations
                 Type = room.roomType?.Name ?? "No Type",
                 Price = room.roomType?.PricePerNight ?? 0,
                 RoomTypeId = room.RoomTypeId,
-                Description = room.roomType?.Description ?? ""
+                Description = room.roomType?.Description ?? "",
+                ImageURL = room.ImageURL
             };
         }
 
@@ -106,7 +109,7 @@ namespace Bookify.Services.Implementations
                     Id = room.RoomId,
                     RoomNumber = room.RoomNumber,
                     RoomTypeId = room.RoomTypeId,
-                    
+                    ImageURL = room.ImageURL
                 });
             }
 
@@ -140,15 +143,14 @@ namespace Bookify.Services.Implementations
             return bookings.Select(b => new BookingDto
             {
                 Id = b.Id,
-                UserId = b.UserId,
-                UserEmail = b.User?.Email ?? "",
-                RoomNumber = b.Room?.RoomNumber ?? "",
-                BookingDate = b.BookingDate,
+                RoomId = b.RoomId,                
+                RoomNumber = b.Room?.RoomNumber,  
                 CheckInDate = b.CheckInDate,
                 CheckOutDate = b.CheckOutDate,
-                Nights = b.Nights,
+                Nights = (b.CheckOutDate - b.CheckInDate).Days,
                 TotalAmount = b.TotalAmount,
-                Status = b.Status
+                Status = b.Status,
+                BookingDate = b.BookingDate
             });
         }
 
@@ -159,12 +161,27 @@ namespace Bookify.Services.Implementations
             {
                 UserId = dto.UserId,
                 RoomId = dto.RoomId,
-                Rating = dto.Rating,
                 Comment = dto.Comment
             };
             await _uow.Reviews.AddAsync(review);
             await _uow.CompleteAsync();
             return true;
+        }
+        // --- Reviews ---
+        public async Task<List<ReviewDto>> GetRoomReviewsAsync(int roomId)
+        {
+            var reviews = await _uow.Reviews.GetReviewsByRoomIdAsync(roomId);
+
+            return reviews.Select(r => new ReviewDto
+            {
+               
+                UserId = r.UserId,
+                Comment = r.Comment,
+             
+                CreatedAt = r.CreatedAt,
+              
+                UserName = r.User != null ? r.User.UserName : "Anonymous" 
+            }).ToList();
         }
 
     }

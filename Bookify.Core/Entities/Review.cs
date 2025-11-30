@@ -14,9 +14,9 @@ namespace Bookify.Core.Entities
         public string UserId { get; set; }
         public int RoomId { get; set; }
 
-        public int Rating { get; set; }
+      
         public string Comment { get; set; }
-        public string Sentiment { get; set; }    // "Positive", "Negative", "Neutral"
+       
         public DateTime CreatedAt { get; set; }
 
         public User User { get; set; }

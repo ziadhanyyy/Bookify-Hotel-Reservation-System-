@@ -32,7 +32,7 @@ namespace Bookify.Web.Controllers
             }
             catch (Exception ex)
             {
-                // هنا ممكن تعمل Logging
+                
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -72,9 +72,45 @@ namespace Bookify.Web.Controllers
         }
 
         // Failed action
-        public IActionResult Failed()
+        public async Task<IActionResult> Failed(int? bookingId)
         {
             ViewBag.Message = "Payment Failed ❌ Please try again.";
+            
+            // If bookingId is provided, try to get booking details
+            if (bookingId.HasValue)
+            {
+                try
+                {
+                    var booking = await _unitOfWork.Bookings.GetByIdAsync(bookingId.Value);
+                    if (booking != null)
+                    {
+                        ViewBag.BookingId = bookingId.Value;
+                        ViewBag.Amount = booking.TotalAmount;
+                        
+                        // Optionally record failed payment
+                        try
+                        {
+                            string transactionId = Guid.NewGuid().ToString();
+                            await _paymentService.RecordPaymentAsync(
+                                bookingId.Value,
+                                "Failed",
+                                booking.TotalAmount,
+                                transactionId
+                            );
+                            ViewBag.TransactionId = transactionId;
+                        }
+                        catch
+                        {
+                            // Log error but don't fail the page
+                        }
+                    }
+                }
+                catch
+                {
+                    // If booking not found, just show generic failure message
+                }
+            }
+            
             return View("PaymentResult");
         }
     }

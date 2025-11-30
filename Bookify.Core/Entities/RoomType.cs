@@ -15,6 +15,7 @@ namespace Bookify.Core.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         [Column(TypeName = "decimal(18,2)")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Price per night must be greater than 0.")]
         public decimal PricePerNight { get; set; }
         public int Capacity { get; set; }
 

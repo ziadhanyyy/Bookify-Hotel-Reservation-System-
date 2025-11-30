@@ -1,13 +1,104 @@
 ﻿@model Bookify.Core.DTOs.RoomDto
+@{
+    ViewData["Title"] = "Room Details";
+}
 
-<h2>@Model.Name Details</h2>
+<div class="container">
+    <div class="row">
+        <!-- Room Image -->
+        <div class="col-md-6 mb-4">
+            <div class="card" style="overflow: hidden; border-radius: var(--radius-lg);">
+                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img src="@Model.ImageURL" alt="@Model.Name" class="card-img-top" style="height: 400px; object-fit: cover;" onerror="this.src='/images/unsplash_CepDpEiALqM.png';">
+                }
+                else
+                {
+                    <div class="room-card-image" style="height: 400px;">
+                        <img src="/images/unsplash_CepDpEiALqM.png" alt="@Model.Name" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                }
+            </div>
+        </div>
 
-<p>Type: @Model.Type</p>
-<p>Price: @Model.Price</p>
-<p>Description: @Model.Description</p>
+        <!-- Room Details -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">@Model.Name</h2>
+                    <p class="text-secondary mb-3">
+                        <i class="fas fa-hashtag"></i> Room #@Model.RoomNumber
+                    </p>
 
-<a asp-action="StartBooking" asp-route-roomId="@Model.Id" class="btn btn-primary">
-    Book Now
-</a>
+                    <div class="mb-3">
+                        <h4 style="color: var(--primary-color);">
+                            $@Model.Price.ToString("F2")
+                            <small style="font-size: 1rem; color: var(--text-secondary);">/night</small>
+                        </h4>
+                    </div>
 
-<a asp-action="AvailableRooms">Back to Rooms</a>
+                    <div class="mb-3">
+                        <h5><i class="fas fa-tag"></i> Type</h5>
+                        <p>@Model.Type</p>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mb-4">
+                            <h5><i class="fas fa-align-left"></i> Description</h5>
+                            <p>@Model.Description</p>
+                        </div>
+                    }
+
+                    <div class="d-flex gap-3 mb-4">
+                        <a asp-action="StartBooking" asp-controller="Customer" asp-route-roomId="@Model.Id" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calendar-check"></i> Book Now
+                        </a>
+                        <a asp-action="AvailableRooms" asp-controller="Customer" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Rooms
+                        </a>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="reviews-section mt-4">
+                        <h4><i class="fas fa-star"></i> Reviews</h4>
+
+                        @if (Model.Reviews != null && Model.Reviews.Any())
+                        {
+                            @foreach (var review in Model.Reviews)
+                            {
+                                <div class="card mb-3 review-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <strong>@review.UserName</strong>
+                                            <small class="text-muted">@review.CreatedAt.ToShortDateString()</small>
+                                        </div>
+                                        <p>@review.Comment</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">No reviews yet. Be the first to review this room!</p>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .review-card {
+        border-left: 3px solid var(--primary-color);
+        padding-left: var(--spacing-md);
+    }
+
+    .review-form {
+        background-color: var(--bg-color);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+    }
+</style>

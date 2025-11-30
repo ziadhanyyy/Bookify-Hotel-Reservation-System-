@@ -1,0 +1,90 @@
+@model Bookify.Core.DTOs.RoomDto
+@{
+    ViewData["Title"] = "Room Details";
+    Layout = "_AdminLayout";
+}
+
+<div class="admin-page-header">
+    <div>
+        <h2><i class="fas fa-bed"></i> Room Details</h2>
+        <p class="text-secondary mb-0">View detailed information about the room</p>
+    </div>
+    <div>
+        <a asp-action="Rooms" class="btn btn-admin-outline">
+            <i class="fas fa-arrow-left"></i> Back to Rooms
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Room Image -->
+    <div class="col-md-6 mb-4">
+        <div class="admin-table-wrapper">
+            <div class="admin-table-header">
+                <h4><i class="fas fa-image"></i> Room Image</h4>
+            </div>
+            <div class="card-body p-0">
+                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img src="@Model.ImageURL" alt="@Model.Name" style="width: 100%; height: 400px; object-fit: cover; border-radius: var(--radius-md);" onerror="this.src='/images/unsplash_CepDpEiALqM.png';">
+                }
+                else
+                {
+                    <div style="width: 100%; height: 400px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md);">
+                        <i class="fas fa-bed" style="font-size: 5rem; color: white; opacity: 0.5;"></i>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Details -->
+    <div class="col-md-6">
+        <div class="admin-table-wrapper">
+            <div class="admin-table-header">
+                <h4><i class="fas fa-info-circle"></i> Room Information</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td><strong><i class="fas fa-hashtag"></i> Room Number:</strong></td>
+                            <td>@Model.RoomNumber</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fas fa-tag"></i> Room Name:</strong></td>
+                            <td>@(Model.Name ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fas fa-list"></i> Room Type:</strong></td>
+                            <td>@(Model.Type ?? "N/A")</td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fas fa-dollar-sign"></i> Price Per Night:</strong></td>
+                            <td><span style="color: var(--success-color); font-weight: bold; font-size: 1.2rem;">$@Model.Price.ToString("F2")</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong><i class="fas fa-id-badge"></i> Room Type ID:</strong></td>
+                            <td>@Model.RoomTypeId</td>
+                        </tr>
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <tr>
+                                <td><strong><i class="fas fa-align-left"></i> Description:</strong></td>
+                                <td>@Model.Description</td>
+                            </tr>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ImageURL))
+                        {
+                            <tr>
+                                <td><strong><i class="fas fa-link"></i> Image URL:</strong></td>
+                                <td><a href="@Model.ImageURL" target="_blank" class="text-primary">View Image</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -26,6 +26,7 @@ namespace Bookify.Services.Interfaces
 
         // --- Reviews ---
         Task<bool> AddReviewAsync(ReviewDto dto);
+        Task<List<ReviewDto>> GetRoomReviewsAsync(int roomId);
 
     }
 }
