@@ -84,6 +84,7 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
+    padding-top: 80px;
 }
 
 /* ========== Typography ========== */
@@ -411,6 +412,11 @@ textarea.form-control {
     background-color: var(--bg-white);
     box-shadow: var(--shadow-md);
     padding: var(--spacing-md) 0;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    z-index: 1000; 
 }
 
 .navbar-brand {

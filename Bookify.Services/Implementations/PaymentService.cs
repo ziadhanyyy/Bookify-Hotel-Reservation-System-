@@ -4,6 +4,7 @@ using Bookify.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
+using Stripe.Forwarding;
 
 public class PaymentService : IPaymentService
 {
@@ -23,6 +24,8 @@ public class PaymentService : IPaymentService
     {
         var options = new SessionCreateOptions
         {
+ 
+
             PaymentMethodTypes = new List<string> { "card" },
             LineItems = new List<SessionLineItemOptions>
             {
@@ -41,8 +44,8 @@ public class PaymentService : IPaymentService
                 }
             },
             Mode = "payment",
-            SuccessUrl = $"https://localhost:7220/Payment/Success?bookingId={bookingId}",
-            CancelUrl = $"https://localhost:7220/Payment/Failed"
+            SuccessUrl = $"https://localhost:7167/Payment/Success?bookingId={bookingId}",
+            CancelUrl = $"https://localhost:7167/Payment/Failed"
         };
 
         var service = new SessionService();

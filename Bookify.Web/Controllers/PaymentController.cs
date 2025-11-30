@@ -48,7 +48,7 @@ namespace Bookify.Web.Controllers
 
                 string transactionId = Guid.NewGuid().ToString();
 
-                await _paymentService.RecordPaymentAsync(
+                var payment = await _paymentService.RecordPaymentAsync(
                     bookingId,
                     "Success",
                     booking.TotalAmount,
@@ -67,9 +67,10 @@ namespace Bookify.Web.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return Content("❌ ERROR IN SUCCESS ACTION: " + ex.Message);
             }
         }
+
 
         // Failed action
         public async Task<IActionResult> Failed(int? bookingId)

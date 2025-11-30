@@ -64,7 +64,7 @@ namespace Bookify.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Bookify.Core.Entities.Payment", b =>
@@ -103,7 +103,7 @@ namespace Bookify.Data.Migrations
                     b.HasIndex("TransactionId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Bookify.Core.Entities.Review", b =>
@@ -134,7 +134,7 @@ namespace Bookify.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Bookify.Core.Entities.Room", b =>
@@ -162,7 +162,7 @@ namespace Bookify.Data.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("Bookify.Core.Entities.RoomType", b =>
@@ -189,7 +189,7 @@ namespace Bookify.Data.Migrations
 
                     b.HasKey("RoomTypeId");
 
-                    b.ToTable("RoomTypes");
+                    b.ToTable("RoomTypes", (string)null);
                 });
 
             modelBuilder.Entity("Bookify.Core.Entities.User", b =>
@@ -284,7 +284,7 @@ namespace Bookify.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlists", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

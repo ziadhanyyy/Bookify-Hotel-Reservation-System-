@@ -2,6 +2,7 @@
 using Bookify.Core.Entities;
 using Bookify.Data.UnitOfWork;
 using Bookify.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -49,19 +50,52 @@ namespace Bookify.Services.Implementations
             return true;
         }
 
-        public async Task<bool> AddRoomAsync(RoomDto dto)
+        public async Task<bool> AddRoomAsync(RoomDto dto, IFormFile roomImage)
         {
+            string imageUrl = null;
+
+            // Handle image upload
+            if (roomImage != null && roomImage.Length > 0)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var fileExtension = Path.GetExtension(roomImage.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                    throw new Exception("Invalid file type. Please upload an image (JPG, PNG, GIF, or WEBP).");
+
+                if (roomImage.Length > 5 * 1024 * 1024)
+                    throw new Exception("File size exceeds 5MB limit.");
+
+                var roomsImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
+                if (!Directory.Exists(roomsImagePath))
+                    Directory.CreateDirectory(roomsImagePath);
+
+                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var filePath = Path.Combine(roomsImagePath, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await roomImage.CopyToAsync(stream);
+                }
+
+                imageUrl = $"/images/rooms/{uniqueFileName}";
+            }
+
+            // Create Room entity
             var room = new Room
             {
                 RoomNumber = dto.RoomNumber,
                 RoomTypeId = dto.RoomTypeId,
                 IsAvailable = true,
-                ImageURL = dto.ImageURL
+                ImageURL = imageUrl
             };
+
             await _uow.Rooms.AddAsync(room);
-             await _uow.CompleteAsync();
+            await _uow.CompleteAsync();
+
             return true;
         }
+
         public async Task<IEnumerable<RoomTypeDto>> GetRoomTypesAsync()
         {
             var roomTypes = await _uow.RoomTypes.GetAllAsync();

@@ -106,77 +106,28 @@ namespace Bookify.Web.Controllers
                 return View(dto);
             }
 
-            // Handle image upload
-            string imageFileName = null;
-            if (roomImage != null && roomImage.Length > 0)
+            try
             {
-                // Validate file type
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
-                var fileExtension = Path.GetExtension(roomImage.FileName).ToLowerInvariant();
-                
-                if (!allowedExtensions.Contains(fileExtension))
+                var result = await _adminService.AddRoomAsync(dto, roomImage);
+                if (result)
                 {
-                    ModelState.AddModelError("", "Invalid file type. Please upload an image (JPG, PNG, GIF, or WEBP).");
-                    ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
-                    return View(dto);
+                    TempData["Success"] = "Room added successfully!";
+                    return RedirectToAction("Rooms");
                 }
-
-                // Validate file size (5MB max)
-                if (roomImage.Length > 5 * 1024 * 1024)
+                else
                 {
-                    ModelState.AddModelError("", "File size exceeds 5MB limit.");
-                    ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
-                    return View(dto);
-                }
-
-                // Create rooms directory if it doesn't exist
-                var roomsImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
-                if (!Directory.Exists(roomsImagePath))
-                {
-                    Directory.CreateDirectory(roomsImagePath);
-                }
-
-                // Generate unique filename
-                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
-                var filePath = Path.Combine(roomsImagePath, uniqueFileName);
-
-                // Save file
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await roomImage.CopyToAsync(stream);
-                }
-
-                imageFileName = uniqueFileName;
-                // Set image URL in DTO
-                dto.ImageURL = $"/images/rooms/{uniqueFileName}";
-            }
-            
-            var result = await _adminService.AddRoomAsync(dto);
-
-            if (result)
-            {
-                // If we have an image, we might want to update the room with the image URL
-                // This depends on your Room entity structure
-                // For now, the image is saved and we can reference it later
-                
-                TempData["Success"] = "Room added successfully!" + (imageFileName != null ? " Image uploaded." : "");
-                return RedirectToAction("Rooms");
-            }
-            
-            // If room creation failed, delete uploaded image
-            if (imageFileName != null)
-            {
-                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms", imageFileName);
-                if (System.IO.File.Exists(imagePath))
-                {
-                    System.IO.File.Delete(imagePath);
+                    TempData["Error"] = "Failed to add room.";
                 }
             }
-            
-            TempData["Error"] = "Failed to add room.";
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Failed to add room: {ex.Message}";
+            }
+
             ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
             return View(dto);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Rooms()

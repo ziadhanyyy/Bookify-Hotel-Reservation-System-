@@ -1,4 +1,5 @@
 ﻿using Bookify.Core.DTOs;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Bookify.Services.Interfaces
         Task<bool> AssignRoleAsync(AssignRoleDto assignRoleDto);
         Task<bool> AddRoomTypeAsync(RoomTypeDto dto);
         Task<IEnumerable<RoomTypeDto>> GetRoomTypesAsync();
-        Task<bool> AddRoomAsync(RoomDto dto);
+        Task<bool> AddRoomAsync(RoomDto dto, IFormFile roomImage);
         Task<IEnumerable<RoomDto>> GetRoomsAsync();
         Task<IEnumerable<BookingDto>> GetAllBookingsAsync();
         Task<bool> DeleteRoomAsync(int roomId);

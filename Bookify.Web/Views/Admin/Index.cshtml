@@ -17,6 +17,7 @@
     </div>
 </div>
 
+
 <!-- Statistics Cards -->
 <div class="admin-stats">
     <div class="admin-stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -152,8 +153,24 @@
                     <i class="fas fa-chevron-right admin-quick-action-arrow"></i>
                 </a>
             </div>
+            
         </div>
+       
     </div>
+</div>
+<div class="col-md-6 col-lg-4">
+    <form asp-controller="Account" asp-action="Logout" method="post">
+        <button type="submit" class="admin-quick-action-card" style="border:none; background:none; padding:0; width:100%; text-align:left;">
+            <div class="admin-quick-action-icon" style="background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="admin-quick-action-content">
+                <h5>Logout</h5>
+                <p>Sign out of your account</p>
+            </div>
+            <i class="fas fa-chevron-right admin-quick-action-arrow"></i>
+        </button>
+    </form>
 </div>
 
 <style>
