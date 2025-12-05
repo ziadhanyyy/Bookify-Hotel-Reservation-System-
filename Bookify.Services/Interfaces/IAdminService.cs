@@ -19,6 +19,8 @@ namespace Bookify.Services.Interfaces
         Task<bool> DeleteRoomAsync(int roomId);
         Task<bool> DeleteRoomTypeAsync(int roomTypeId);
         Task<DashboardStatsDto> GetDashboardStatsAsync();
+        Task<bool> UpdateRoomTypeAsync(RoomTypeDto dto);
+        Task<bool> UpdateRoomAsync(RoomDto dto, IFormFile? roomImage);
 
 
     }

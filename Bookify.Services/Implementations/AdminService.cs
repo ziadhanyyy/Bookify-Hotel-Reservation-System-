@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+
 
 namespace Bookify.Services.Implementations
 {
@@ -95,6 +97,21 @@ namespace Bookify.Services.Implementations
 
             return true;
         }
+        public async Task<bool> UpdateRoomTypeAsync(RoomTypeDto dto)
+        {
+            var roomType = await _uow.RoomTypes.GetByIdAsync(dto.Id);
+            if (roomType == null) return false;
+
+            roomType.Name = dto.Name;
+            roomType.Description = dto.Description;
+            roomType.PricePerNight = dto.PricePerNight;
+            roomType.Capacity = dto.Capacity;
+
+            _uow.RoomTypes.Update(roomType);
+            await _uow.CompleteAsync();
+            return true;
+        }
+
 
         public async Task<IEnumerable<RoomTypeDto>> GetRoomTypesAsync()
         {
@@ -117,6 +134,39 @@ namespace Bookify.Services.Implementations
                 RoomTypeId = r.RoomTypeId,
                 ImageURL = r.ImageURL
             });
+        }
+        public async Task<bool> UpdateRoomAsync(RoomDto dto, IFormFile? roomImage)
+        {
+            var room = await _uow.Rooms.GetByIdAsync(dto.Id);
+            if (room == null) return false;
+
+            room.RoomNumber = dto.RoomNumber;
+            room.RoomTypeId = dto.RoomTypeId;
+
+            
+            if (roomImage != null && roomImage.Length > 0)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var fileExtension = Path.GetExtension(roomImage.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(fileExtension))
+                    throw new Exception("Invalid file type.");
+
+                var roomsImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms");
+                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var filePath = Path.Combine(roomsImagePath, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await roomImage.CopyToAsync(stream);
+                }
+
+                room.ImageURL = $"/images/rooms/{uniqueFileName}";
+            }
+
+            _uow.Rooms.Update(room);
+            await _uow.CompleteAsync();
+            return true;
         }
 
         public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()

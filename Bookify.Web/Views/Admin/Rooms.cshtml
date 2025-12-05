@@ -45,7 +45,13 @@
                                     <a asp-action="RoomDetails" asp-route-id="@room.Id" class="admin-action-btn admin-action-btn-view" title="View Details">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <form asp-action="DeleteRoom" asp-route-id="@room.Id" method="post" style="display: inline;" onsubmit="return confirmDelete('room', '@room.RoomNumber');">
+
+                                    <a asp-action="EditRoom" asp-route-id="@room.Id" class="admin-action-btn admin-action-btn-edit" title="Edit Room">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <form asp-action="DeleteRoom" asp-route-id="@room.Id" method="post" style="display: inline;"
+                                          onsubmit="return confirmDelete('room', '@room.RoomNumber');">
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="admin-action-btn admin-action-btn-delete" title="Delete Room">
                                             <i class="fas fa-trash"></i>
@@ -53,6 +59,7 @@
                                     </form>
                                 </div>
                             </td>
+
                         </tr>
                     }
                 </tbody>

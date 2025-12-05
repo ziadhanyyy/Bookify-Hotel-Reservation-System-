@@ -85,6 +85,38 @@ namespace Bookify.Web.Controllers
             var roomTypes = await _adminService.GetRoomTypesAsync();
             return View(roomTypes);
         }
+        [HttpGet]
+        public async Task<IActionResult> EditRoom(int id)
+        {
+            var rooms = await _adminService.GetRoomsAsync();
+            var room = rooms.FirstOrDefault(r => r.Id == id);
+
+            if (room == null) return NotFound();
+
+            ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
+            return View(room);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRoom(RoomDto dto, IFormFile? roomImage)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.RoomTypes = await _adminService.GetRoomTypesAsync();
+                return View(dto);
+            }
+
+            var result = await _adminService.UpdateRoomAsync(dto, roomImage);
+            if (result)
+            {
+                TempData["Success"] = "Room updated successfully!";
+                return RedirectToAction("Rooms");
+            }
+
+            TempData["Error"] = "Failed to update room.";
+            return View(dto);
+        }
+
 
         // ------------------- Rooms -------------------
         [HttpGet]
@@ -173,6 +205,32 @@ namespace Bookify.Web.Controllers
             }
             return RedirectToAction("RoomTypes");
         }
+        [HttpGet]
+        public async Task<IActionResult> EditRoomType(int id)
+        {
+            var roomType = await _adminService.GetRoomTypesAsync();
+            var dto = roomType.FirstOrDefault(rt => rt.Id == id);
+            if (dto == null) return NotFound();
+
+            return View(dto);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRoomType(RoomTypeDto dto)
+        {
+            if (!ModelState.IsValid) return View(dto);
+
+            var result = await _adminService.UpdateRoomTypeAsync(dto);
+            if (result)
+            {
+                TempData["Success"] = "Room type updated successfully!";
+                return RedirectToAction("RoomTypes");
+            }
+
+            TempData["Error"] = "Failed to update room type.";
+            return View(dto);
+        }
+
 
 
         // ------------------- Bookings -------------------

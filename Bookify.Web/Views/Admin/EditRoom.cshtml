@@ -1,0 +1,32 @@
+﻿@model Bookify.Core.DTOs.RoomDto
+@{
+    ViewData["Title"] = "Add Room Type";
+    Layout = "_AdminLayout";
+}
+
+<h2>Edit Room</h2>
+
+<form asp-action="EditRoom" method="post" enctype="multipart/form-data">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="RoomNumber"></label>
+        <input asp-for="RoomNumber" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Room Type</label>
+        <select asp-for="RoomTypeId" class="form-control" asp-items="@(new SelectList(ViewBag.RoomTypes, "Id", "Name"))"></select>
+
+
+    </div>
+
+    <div class="form-group">
+        <label>Upload New Image (Optional)</label>
+        <input type="file" name="roomImage" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+
+</form>

@@ -55,8 +55,14 @@
                             </td>
                             <td>
                                 <div class="admin-actions">
-                                    <span class="badge badge-info">Active</span>
-                                    <form asp-action="DeleteRoomType" asp-route-id="@rt.Id" method="post" style="display: inline; margin-left: 8px;" onsubmit="return confirmDelete('room type', '@rt.Name');">
+                                    <a asp-action="EditRoomType" asp-route-id="@rt.Id"
+                                       class="admin-action-btn admin-action-btn-edit" title="Edit Room Type">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <form asp-action="DeleteRoomType" asp-route-id="@rt.Id" method="post"
+                                          style="display: inline; margin-left: 8px;"
+                                          onsubmit="return confirmDelete('room type', '@rt.Name');">
                                         @Html.AntiForgeryToken()
                                         <button type="submit" class="admin-action-btn admin-action-btn-delete" title="Delete Room Type">
                                             <i class="fas fa-trash"></i>
@@ -64,6 +70,7 @@
                                     </form>
                                 </div>
                             </td>
+
                         </tr>
                     }
                 </tbody>
